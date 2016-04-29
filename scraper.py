@@ -32,7 +32,7 @@ class Scrapper:
     turnPageDiv = soup.find("div", {"id": "mw-pages"})
 
     #collect device pages
-    for i in range(1, 1):
+    for i in range(1, 75):
         r  = requests.get("https://wikidevi.com/w/index.php?title=Category:Wireless_embedded_system&pageuntil=AirVast+WR-2000" + turnPageDiv.findAll('a')[1]['href'])
         data = r.text
         soup = BeautifulSoup(data, 'lxml')
