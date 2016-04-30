@@ -14,13 +14,13 @@ devicesFile = open('Devices.csv')
 devicesReader = csv.reader(devicesFile)
 devicesData = list(devicesReader)
 
-dateList = [] 
+dateList = []
 RAMList = []
 FlashList = []
 WirelessList =[]
 WiredList = []
 
-#date 
+#date
 for d in devicesData:
 
 	#if not empty
@@ -47,59 +47,103 @@ for d in devicesData:
 		elif("g" in d[4]):
 			wirelessSpeed = 54
 		else:
-			wirelessSpeed = 11 
+			wirelessSpeed = 11
 
 		WirelessList.append(wirelessSpeed) #if contains ac...
 
+#average results per year
+def averageResults(a , b):
+    #for every duplicate a add the b equivalent
+    matches = zip (a, b)
+    #Find unique dates
+    dates = list(set(a))
+    histDict = {}
+    #Collect all results with that date
+    for d in dates:
+        histDict[d] = 0
+        count = 0
+        for m in matches:
+            if(m[0] == d):
+                histDict[d] = histDict[d] + m[1]
+                count+=1
+        #Average that hist
+        if(histDict[d]):
+            print(d, histDict[d], count, histDict[d]/count)
+            histDict[d]=histDict[d]/count
+    return histDict
 
-#m, b = np.polyfit(np.array(dateList), np.array(FlashList), 1)
-coefficients = polyfit(np.array(dateList), np.array(FlashList), 3)
+
+
+
+
+flashAverage = averageResults(dateList, FlashList)
+print flashAverage.keys()
+print flashAverage.values()
+lineWeight=5
+coefficients = polyfit(np.array(flashAverage.keys()), np.array(flashAverage.values()), 3)
+#coefficients = polyfit(np.array(dateList), np.array(FlashList), 3)
+
 polynomial = np.poly1d(coefficients)
-xs = np.linspace(np.array(dateList)[0], np.array(dateList)[-1], 50)
+#xs = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50, endpoint=True)
+xs = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50, endpoint=True)
 ys = polynomial(xs)
-plt.plot(np.array(dateList), np.array(FlashList),'o', xs, ys)
-#plt.plot(np.array(dateList), m*np.array(dateList) + b, '-')
+plt.plot(np.array(flashAverage.keys()), np.array(flashAverage.values()),'o', xs, ys, linewidth=lineWeight)
 plt.ylabel('ROM MiB')
 plt.xlabel('Years')
 plt.show()
 
 
-coefficients = polyfit(np.array(dateList), np.array(RAMList), 5)
+
+ramAverage = averageResults(dateList, RAMList)
+
+#coefficients = polyfit(np.array(dateList), np.array(RAMList), 3)
+
+coefficients = polyfit(np.array(ramAverage.keys()), np.array(ramAverage.values()), 3)
+
 polynomial = np.poly1d(coefficients)
-xs = np.linspace(np.array(dateList)[0], np.array(dateList)[-1], 50)
+xs = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50)
 ys = polynomial(xs)
-plt.plot(np.array(dateList), np.array(RAMList),'o', xs, ys)
+plt.plot(np.array(ramAverage.keys()), np.array(ramAverage.values()),'o', xs, ys, linewidth=lineWeight)
 plt.ylabel('RAM MiB')
 plt.xlabel('Years')
 plt.show()
 
 
-coefficients = polyfit(np.array(dateList), np.array(WiredList), 5)
+
+wiredAverage = averageResults(dateList, WiredList)
+
+#coefficients = polyfit(np.array(dateList), np.array(WiredList), 3)
+coefficients = polyfit(np.array(wiredAverage.keys()), np.array(wiredAverage.values()), 3)
 polynomial = np.poly1d(coefficients)
-xs = np.linspace(np.array(dateList)[0], np.array(dateList)[-1], 50)
+xs = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50)
 ys = polynomial(xs)
 
 
-plt.plot(np.array(dateList), np.array(WiredList), 'o', xs, ys)
-
-plt.ylabel('Mbps')
-plt.xlabel('Years')
-plt.show()
-
-coefficients = polyfit(np.array(dateList), np.array(WirelessList), 5)
-polynomial = np.poly1d(coefficients)
-xs = np.linspace(np.array(dateList)[0], np.array(dateList)[-1], 50)
-ys = polynomial(xs)
-
-
-
-plt.plot(np.array(dateList), np.array(WirelessList), 'o', xs, ys)
+plt.plot(np.array(wiredAverage.keys()), np.array(wiredAverage.values()), 'o', xs, ys, linewidth=lineWeight)
 
 plt.ylabel('Mbps')
 plt.xlabel('Years')
 plt.show()
 
 
+wirelessAverage = averageResults(dateList, WirelessList)
+
+#coefficients = polyfit(np.array(dateList), np.array(WirelessList), 4)
+
+coefficients = polyfit(np.array(wirelessAverage.keys()), np.array(wirelessAverage.values()), 4)
+polynomial = np.poly1d(coefficients)
+xs = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50)
+ys = polynomial(xs)
 
 
-	
+
+plt.plot(np.array(wirelessAverage.keys()), np.array(wirelessAverage.values()), 'o', xs, ys, linewidth=lineWeight)
+
+plt.ylabel('Mbps')
+plt.xlabel('Years')
+plt.show()
+
+
+
+
+
