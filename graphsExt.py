@@ -52,6 +52,10 @@ for d in devicesData:
 
 		WirelessList.append(wirelessSpeed) #if contains ac...
 
+
+
+
+
 #average results per year
 def averageResults(a , b):
     #for every duplicate a add the b equivalent
