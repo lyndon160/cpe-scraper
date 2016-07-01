@@ -6,6 +6,7 @@ import numpy as np
 
 from numpy import *
 from matplotlib.pyplot import *
+import matplotlib.patches as mpatches
 
 
 
@@ -138,6 +139,21 @@ ys = polynomial(xs)
 
 
 plt.plot(np.array(wirelessAverage.keys()), np.array(wirelessAverage.values()), 'o', xs, ys, linewidth=lineWeight)
+
+coefficients2 = polyfit(np.array(wiredAverage.keys()), np.array(wiredAverage.values()), 3)
+polynomial2 = np.poly1d(coefficients2)
+xs2 = np.linspace(np.amax(np.array(dateList)), np.amin(np.array(dateList)), 50)
+ys2 = polynomial2(xs2)
+
+
+plt.plot(np.array(wiredAverage.keys()), np.array(wiredAverage.values()), 'o', xs2, ys2, linewidth=lineWeight)
+
+
+wired_patch = mpatches.Patch(color='c', label='Wired')
+wireless_patch = mpatches.Patch(color='green', label='Wireless')
+plt.legend(handles=[wired_patch, wireless_patch])
+
+
 
 plt.ylabel('Mbps')
 plt.xlabel('Years')
